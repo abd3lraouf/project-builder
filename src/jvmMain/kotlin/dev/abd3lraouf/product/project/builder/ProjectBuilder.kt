@@ -41,16 +41,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposeWindow
-import androidx.compose.ui.awt.SwingPanel
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.Key.Companion.A
-import androidx.compose.ui.input.key.Key.Companion.C
 import androidx.compose.ui.input.key.Key.Companion.S
-import androidx.compose.ui.input.key.Key.Companion.V
-import androidx.compose.ui.input.key.Key.Companion.X
-import androidx.compose.ui.input.key.Key.Companion.Z
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -69,7 +63,6 @@ import androidx.compose.ui.window.rememberDialogState
 import androidx.compose.ui.window.rememberWindowState
 import dev.abd3lraouf.product.project.builder.Shortcut.Ctrl
 import dev.abd3lraouf.product.project.builder.Shortcut.CtrlAlt
-import dev.abd3lraouf.product.project.builder.Shortcut.CtrlShift
 import org.jetbrains.jewel.foundation.ExperimentalJewelApi
 import org.jetbrains.jewel.foundation.enableNewSwingCompositing
 import org.jetbrains.jewel.foundation.theme.JewelTheme
@@ -86,8 +79,6 @@ import org.jetbrains.jewel.window.TitleBar
 import org.jetbrains.jewel.window.newFullscreenControls
 import org.jetbrains.jewel.window.styling.TitleBarStyle
 import java.awt.Desktop
-import java.awt.event.FocusEvent
-import java.awt.event.FocusListener
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.deleteRecursively
 
@@ -114,7 +105,7 @@ private class UiState(val builderState: BuilderState, window: ComposeWindow) {
 }
 
 @Composable
-private fun FrameWindowScope.KotlinExplorer(
+private fun FrameWindowScope.projectBuilder(
     builderState: BuilderState
 ) {
     val uiState = remember { UiState(builderState, window) }
@@ -130,7 +121,7 @@ private fun FrameWindowScope.KotlinExplorer(
     }
 
     if (uiState.showSettings) {
-        SettingsDialog(builderState, uiState)
+//        SettingsDialog(builderState, uiState)
     }
 
 }
@@ -258,7 +249,7 @@ private fun performSwingMenuAction(actionType: Int) {
 
 @OptIn(ExperimentalJewelApi::class)
 fun main() {
-    System.setProperty("apple.awt.application.name", "Kotlin Explorer")
+    System.setProperty("apple.awt.application.name", "Project Builder")
 
     application {
         // Faster scrolling in Swing components
@@ -294,12 +285,12 @@ fun main() {
                 state = windowState, onCloseRequest = {
                     builderState.setWindowState(windowState)
                     exitApplication()
-                }, title = "Kotlin Explorer"
+                }, title = "Project Builder"
             ) {
                 TitleBar(Modifier.newFullscreenControls()) {
-                    Text("Kotlin Explorer")
+                    Text("Project Builder")
                 }
-                KotlinExplorer(builderState)
+                projectBuilder(builderState)
             }
         }
     }

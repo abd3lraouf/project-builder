@@ -11,13 +11,6 @@ plugins {
     id("com.dorongold.task-tree") version "2.1.1"
 }
 
-repositories {
-    google()
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    maven("https://packages.jetbrains.team/maven/p/kpm/public/")
-}
-
 version = "1.0.0"
 val baseName = "Project Builder"
 val osName = System.getProperty("os.name")
@@ -35,6 +28,7 @@ val targetArch = when (val osArch = System.getProperty("os.arch")) {
 }
 
 val target = "${targetOs}-${targetArch}"
+val jdkLevel = project.property("jdk.level") as String
 
 kotlin {
     jvm {
@@ -46,7 +40,7 @@ kotlin {
 
     jvmToolchain {
         vendor = JvmVendorSpec.JETBRAINS
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(jdkLevel)
     }
 
     sourceSets {
@@ -60,6 +54,8 @@ kotlin {
                 implementation(libs.compose.splitpane)
                 implementation(libs.jewel)
                 implementation(libs.jewel.decorated)
+                implementation(libs.jewel.markdown)
+                implementation(libs.jewel.foundation)
                 implementation(libs.jna)
                 implementation(libs.lifecycle)
                 implementation(libs.lifecycle.compose)
@@ -67,6 +63,13 @@ kotlin {
                 implementation(libs.lifecycle.viewmodel.compose)
                 val skikoVersion = libs.versions.skiko.get()
                 implementation("org.jetbrains.skiko:skiko-awt-runtime-$target:$skikoVersion")
+
+                implementation(libs.kotlin.reflect)
+                implementation(libs.filePicker)
+                implementation(compose.desktop.currentOs) {
+                    exclude(group = "org.jetbrains.compose.material")
+                }
+                implementation(libs.intellijPlatform.icons)
             }
         }
 
@@ -82,7 +85,8 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "dev.abd3lraouf.product.project.builder.ProjectBuilderKt"
+//        mainClass = "dev.abd3lraouf.product.project.builder.ProjectBuilderKt"
+        mainClass = "org.jetbrains.jewel.samples.standalone.MainKt"
         buildTypes.release.proguard {
             configurationFiles.from(project.file("compose-desktop.pro"))
         }
@@ -136,5 +140,19 @@ val renameDmg by tasks.registering(Copy::class) {
 project.afterEvaluate {
     tasks.named("packageReleaseDmg") {
         finalizedBy(renameDmg)
+    }
+}
+
+tasks {
+    withType<JavaExec> {
+        // afterEvaluate is needed because the Compose Gradle Plugin
+        // register the task in the afterEvaluate block
+        afterEvaluate {
+            javaLauncher =
+                project.javaToolchains.launcherFor {
+                    languageVersion = JavaLanguageVersion.of(jdkLevel)
+                }
+            setExecutable(javaLauncher.map { it.executablePath.asFile.absolutePath }.get())
+        }
     }
 }

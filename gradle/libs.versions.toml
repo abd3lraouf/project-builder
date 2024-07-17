@@ -1,20 +1,38 @@
 [versions]
 collection = "1.4.0"
 compose = "1.6.10"
-jewel = "0.19.3"
+jewel = "1.0.0-SNAPSHOT"
 jna = "5.14.0"
 junit4 = "4.13.2"
 kotlin = "2.0.0"
 lifecycle = "2.8.0"
-skiko="0.8.4"
+skiko="0.8.10"
 truth = "1.4.2"
+
+
+
+commonmark = "0.22.0"
+composeDesktop = "1.7.0-dev1703"
+detekt = "1.23.6"
+dokka = "1.9.20"
+idea = "242.20224.38"
+intelliJPlatformBuild = "242.20224.38-EAP-SNAPSHOT"
+ideaPlugin = "2.0.0-beta9"
+kotlinSarif = "0.5.0"
+kotlinpoet = "1.17.0"
+kotlinterGradlePlugin = "4.3.0"
+kotlinxSerialization = "1.6.3"
+kotlinxBinaryCompat = "0.14.0"
+poko = "0.15.3"
 
 [libraries]
 collection = { group = "androidx.collection", name = "collection", version.ref = "collection" }
 compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3-desktop", version.ref = "compose" }
 compose-splitpane = { group = "org.jetbrains.compose.components", name = "components-splitpane-desktop", version.ref = "compose" }
-jewel = { group = "org.jetbrains.jewel", name = "jewel-int-ui-standalone-241", version.ref = "jewel" }
-jewel-decorated = { group = "org.jetbrains.jewel", name = "jewel-int-ui-decorated-window-241", version.ref = "jewel" }
+jewel = { group = "org.jetbrains.jewel", name = "jewel-int-ui-standalone-242", version.ref = "jewel" }
+jewel-decorated = { group = "org.jetbrains.jewel", name = "jewel-int-ui-decorated-window-242", version.ref = "jewel" }
+jewel-foundation = { group = "org.jetbrains.jewel", name = "jewel-foundation-242", version.ref = "jewel" }
+jewel-markdown = { group = "org.jetbrains.jewel", name = "jewel-markdown-int-ui-standalone-styling-242", version.ref = "jewel" }
 jna = { group = "net.java.dev.jna", name = "jna", version.ref = "jna" }
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
@@ -22,8 +40,32 @@ lifecycle = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runt
 lifecycle-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
 lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-skiko-linux = { group = "org.jetbrains.skiko", name = "skiko-awt-runtime-linux-arm64", version.ref = "skiko" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+
+
+commonmark-core = { module = "org.commonmark:commonmark", version.ref = "commonmark" }
+commonmark-ext-autolink = { module = "org.commonmark:commonmark-ext-autolink", version.ref = "commonmark" }
+
+filePicker = { module = "com.darkrockstudios:mpfilepicker", version = "3.1.0" }
+
+kotlinSarif = { module = "io.github.detekt.sarif4k:sarif4k", version.ref = "kotlinSarif" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+jna-core = { module = "net.java.dev.jna:jna", version.ref = "jna" }
+
+intellijPlatform-util-ui = { module = "com.jetbrains.intellij.platform:util-ui", version.ref = "intelliJPlatformBuild" }
+intellijPlatform-icons = { module = "com.jetbrains.intellij.platform:icons", version.ref = "intelliJPlatformBuild" }
+
+# Plugin libraries for build-logic's convention plugins to use to resolve the types/tasks coming from these plugins
+detekt-gradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+dokka-gradlePlugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
+kotlinter-gradlePlugin = { module = "org.jmailen.gradle:kotlinter-gradle", version.ref = "kotlinterGradlePlugin" }
+kotlinx-binaryCompatValidator-gradlePlugin = { module = "org.jetbrains.kotlinx:binary-compatibility-validator", version.ref = "kotlinxBinaryCompat" }
+poko-gradlePlugin = { module = "dev.drewhamilton.poko:poko-gradle-plugin", version.ref = "poko" }
+
 
 [plugins]
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
