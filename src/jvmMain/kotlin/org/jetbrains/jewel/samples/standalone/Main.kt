@@ -1,9 +1,12 @@
 package org.jetbrains.jewel.samples.standalone
 
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.ResourceLoader
+import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.res.loadSvgPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.window.application
@@ -28,13 +31,12 @@ import org.jetbrains.jewel.window.DecoratedWindow
 import org.jetbrains.jewel.window.styling.TitleBarStyle
 import java.io.InputStream
 
-@OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     JewelLogger
-        .getInstance("StandaloneSample")
-        .info("Starting Jewel Standalone sample")
+        .getInstance("ProjectBuilder")
+        .info("Starting Project Builder")
 
-    val icon = svgResource("icons/jewel-logo.svg")
+    val iconPath = "icons/app-icon.png"
 
     application {
         val textStyle = JewelTheme.createDefaultTextStyle(fontFamily = FontFamily.Inter)
@@ -49,27 +51,25 @@ fun main() {
 
         IntUiTheme(
             theme = themeDefinition,
-            styling =
-                ComponentStyling.default().decoratedWindow(
+            styling = ComponentStyling.default().decoratedWindow(
                     titleBarStyle =
                         when (MainViewModel.theme) {
-                            IntUiThemes.Light -> TitleBarStyle.light()
-                            IntUiThemes.LightWithLightHeader -> TitleBarStyle.lightWithLightHeader()
+                            IntUiThemes.Light -> TitleBarStyle.lightWithLightHeader()
                             IntUiThemes.Dark -> TitleBarStyle.dark()
                             IntUiThemes.System ->
                                 if (MainViewModel.theme.isDark()) {
                                     TitleBarStyle.dark()
                                 } else {
-                                    TitleBarStyle.light()
+                                    TitleBarStyle.lightWithLightHeader()
                                 }
                         },
                 ),
-            swingCompatMode = MainViewModel.swingCompat,
+            swingCompatMode = true,
         ) {
             DecoratedWindow(
                 onCloseRequest = { exitApplication() },
-                title = "Jewel standalone sample",
-                icon = icon,
+                title = "Project Builder",
+                icon = painterResource(iconPath),
             ) {
                 TitleBarView()
                 MainViewModel.currentView.content()

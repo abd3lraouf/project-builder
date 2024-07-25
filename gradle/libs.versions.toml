@@ -1,6 +1,6 @@
 [versions]
 collection = "1.4.0"
-compose = "1.6.10"
+compose = "1.7.0-dev1703"
 jewel = "1.0.0-SNAPSHOT"
 jna = "5.14.0"
 junit4 = "4.13.2"
@@ -8,11 +8,7 @@ kotlin = "2.0.0"
 lifecycle = "2.8.0"
 skiko="0.8.10"
 truth = "1.4.2"
-
-
-
 commonmark = "0.22.0"
-composeDesktop = "1.7.0-dev1703"
 detekt = "1.23.6"
 dokka = "1.9.20"
 idea = "242.20224.38"

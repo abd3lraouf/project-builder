@@ -16,8 +16,10 @@ import org.jetbrains.jewel.samples.standalone.viewmodel.MainViewModel
 import org.jetbrains.jewel.ui.component.Dropdown
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.IconButton
+import org.jetbrains.jewel.ui.component.PlatformIcon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.Tooltip
+import org.jetbrains.jewel.ui.icons.AllIconsKeys
 import org.jetbrains.jewel.ui.painter.hints.Size
 import org.jetbrains.jewel.window.DecoratedWindowScope
 import org.jetbrains.jewel.window.TitleBar
@@ -78,30 +80,21 @@ fun DecoratedWindowScope.TitleBarView() {
 
             Tooltip({
                 when (MainViewModel.theme) {
-                    IntUiThemes.Light -> Text("Switch to light theme with light header")
-                    IntUiThemes.LightWithLightHeader -> Text("Switch to dark theme")
+                    IntUiThemes.Light -> Text("Switch to dark theme")
                     IntUiThemes.Dark, IntUiThemes.System -> Text("Switch to light theme")
                 }
             }) {
-                IconButton({
-                    MainViewModel.theme =
-                        when (MainViewModel.theme) {
-                            IntUiThemes.Light -> IntUiThemes.LightWithLightHeader
-                            IntUiThemes.LightWithLightHeader -> IntUiThemes.Dark
-                            IntUiThemes.Dark, IntUiThemes.System -> IntUiThemes.Light
-                        }
-                }, Modifier.size(40.dp).padding(5.dp)) {
+                IconButton(onClick = {
+                    MainViewModel.theme = when (MainViewModel.theme) {
+                        IntUiThemes.Light -> IntUiThemes.Dark
+                        IntUiThemes.Dark -> IntUiThemes.System
+                        IntUiThemes.System -> IntUiThemes.Light
+                    }
+                }, modifier = Modifier.size(40.dp).padding(5.dp)) {
                     when (MainViewModel.theme) {
                         IntUiThemes.Light ->
                             Icon(
                                 "icons/lightTheme@20x20.svg",
-                                "Themes",
-                                StandaloneSampleIcons::class.java,
-                            )
-
-                        IntUiThemes.LightWithLightHeader ->
-                            Icon(
-                                "icons/lightWithLightHeaderTheme@20x20.svg",
                                 "Themes",
                                 StandaloneSampleIcons::class.java,
                             )
@@ -122,6 +115,7 @@ fun DecoratedWindowScope.TitleBarView() {
                     }
                 }
             }
+
         }
     }
 }

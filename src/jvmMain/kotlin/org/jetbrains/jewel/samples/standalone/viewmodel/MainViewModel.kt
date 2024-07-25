@@ -9,9 +9,7 @@ import org.jetbrains.jewel.samples.standalone.IntUiThemes
 import org.jetbrains.jewel.samples.standalone.reflection.findViews
 
 object MainViewModel {
-    var theme: IntUiThemes by mutableStateOf(IntUiThemes.Light)
-
-    var swingCompat: Boolean by mutableStateOf(false)
+    var theme: IntUiThemes by mutableStateOf(IntUiThemes.System)
 
     val projectColor
         get() =

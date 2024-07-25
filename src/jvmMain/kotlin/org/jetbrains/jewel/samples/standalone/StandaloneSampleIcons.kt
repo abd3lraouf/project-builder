@@ -7,6 +7,5 @@ object StandaloneSampleIcons {
     val jewelLogo = PathIconKey("icons/jewel-logo.svg")
     val themeDark = PathIconKey("icons/darkTheme.svg")
     val themeLight = PathIconKey("icons/lightTheme.svg")
-    val themeLightWithLightHeader = PathIconKey("icons/lightWithLightHeaderTheme.svg")
     val themeSystem = PathIconKey("icons/systemTheme.svg")
 }
