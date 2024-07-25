@@ -34,29 +34,25 @@ fun Settings(
     onSaveRequest: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    val androidHome = remember { mutableStateOf(state.androidHome) }
-    val kotlinHome = remember { mutableStateOf(state.kotlinHome) }
-    val indent = remember { mutableStateOf(state.indent.toString()) }
-    val lineNumberWidth = remember { mutableStateOf(state.lineNumberWidth.toString()) }
-    val decompileHiddenIsa = remember { mutableStateOf(state.decompileHiddenIsa) }
+    val storytellerSdkKotlin = remember { mutableStateOf(state.storytellerSdkKotlin) }
+    val showcase = remember { mutableStateOf(state.showcase) }
+    val nba = remember { mutableStateOf(state.nba) }
     val onSaveClick = {
         state.saveState(
-            androidHome.value,
-            kotlinHome.value,
-            indent.value,
-            lineNumberWidth.value,
-            decompileHiddenIsa.value
+            storytellerSdkKotlin.value,
+            showcase.value,
+            nba.value
         )
         onSaveRequest()
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(16.dp)) {
-        val toolPaths = ToolPaths(state.directory, androidHome.value, kotlinHome.value)
-        StringSetting("Android home directory: ", androidHome) { toolPaths.isAndroidHomeValid }
-        StringSetting("Kotlin home directory: ", kotlinHome) { toolPaths.isKotlinHomeValid }
-        IntSetting("Decompiled code indent: ", indent, minValue = 2)
-        IntSetting("Line number column width: ", lineNumberWidth, minValue = 1)
-        BooleanSetting("Decompile hidden instruction sets", decompileHiddenIsa)
+        val toolPaths = ProjectPaths(state.directory, storytellerSdkKotlin.value, showcase.value, nba.value)
+        GroupHeader("Projects")
+        StringSetting("storyteller-sdk-kotlin: ", storytellerSdkKotlin) { toolPaths.isStorytellerSdkKotlinValid }
+        StringSetting("storyteller-showcase-android: ", showcase) { toolPaths.isShowcaseValid }
+        StringSetting("nba-nextgen-android: ", nba) { toolPaths.isNbaValid }
+
         Spacer(modifier = Modifier.height(8.dp))
         Buttons(saveEnabled = toolPaths.isValid, onSaveClick, onDismissRequest)
     }
@@ -79,17 +75,13 @@ private fun ColumnScope.Buttons(
 }
 
 private fun BuilderState.saveState(
-    androidHome: String,
-    kotlinHome: String,
-    indent: String,
-    lineNumberWidth: String,
-    decompileHiddenIsa: Boolean,
+    storytellerSdkKotlin: String,
+    showcase: String,
+    nba: String,
 ) {
-    this.androidHome = androidHome
-    this.kotlinHome = kotlinHome
-    this.indent = indent.toInt()
-    this.lineNumberWidth = lineNumberWidth.toInt()
-    this.decompileHiddenIsa = decompileHiddenIsa
+    this.storytellerSdkKotlin = storytellerSdkKotlin
+    this.showcase = showcase
+    this.nba = nba
     this.reloadToolPathsFromSettings()
 }
 

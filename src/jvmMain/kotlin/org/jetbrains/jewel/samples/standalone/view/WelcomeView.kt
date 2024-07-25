@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,9 +32,7 @@ import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.Tooltip
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 import org.jetbrains.jewel.ui.painter.hints.Size
-import java.io.File
-import javax.swing.JFileChooser
-import javax.swing.filechooser.FileSystemView
+import javax.swing.UIManager
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -51,7 +50,9 @@ fun WelcomeView() {
                 PlatformIcon(AllIconsKeys.General.Settings, "Settings", hint = Size(20))
             }
         }
-
+        LaunchedEffect(Unit) {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+        }
         if (showSettings) {
             SettingsDialog(BuilderState()) {
                 showSettings = false
@@ -82,30 +83,7 @@ private fun SettingsDialog(
                 false
             }
         }) {
-//        fileChooserDialog("Choose a file")
-//        Settings(builderState, onSaveRequest = onSaveRequest, onDismissRequest = onDismissRequest)
+        Settings(builderState, onSaveRequest = onSaveRequest, onDismissRequest = onDismissRequest)
     }
-
-}
-
-fun fileChooserDialog(
-    title: String?
-): String {
-    val fileChooser = JFileChooser(FileSystemView.getFileSystemView())
-    fileChooser.currentDirectory = File(System.getProperty("user.dir"))
-    fileChooser.dialogTitle = title
-    fileChooser.fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES
-    fileChooser.isAcceptAllFileFilterUsed = true
-    fileChooser.selectedFile = null
-    fileChooser.currentDirectory = null
-    val file = if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        fileChooser.selectedFile.toString()
-    } else {
-
-        ""
-
-    }
-
-    return file
 
 }

@@ -18,20 +18,15 @@ package dev.abd3lraouf.product.project.builder
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.WindowPlacement
-import androidx.compose.ui.window.WindowPlacement.Floating
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.exists
 import kotlin.io.path.readLines
 
-private const val AndroidHome = "ANDROID_HOME"
-private const val KotlinHome = "KOTLIN_HOME"
-private const val Optimize = "OPTIMIZE"
-private const val R8Rules = "R8_RULES"
-private const val AutoBuildOnStartup = "AUTO_BUILD_ON_STARTUP"
-private const val Presentation = "PRESENTATION"
-private const val ShowLineNumbers = "SHOW_LINE_NUMBERS"
+private const val STORYTELLER_SDK_KOTLIN = "STORYTELLER_SDK_KOTLIN"
+private const val SHOWCASE = "SHOWCASE"
+private const val NBA = "NBA"
 private const val ShowByteCode = "SHOW_BYTE_CODE"
 private const val ShowDex = "SHOW_DEX"
 private const val ShowOat = "SHOW_OAT"
@@ -51,29 +46,20 @@ class BuilderState {
     private val file: Path = directory.resolve("settings")
     private val entries: MutableMap<String, String> = readSettings(file)
 
-    var androidHome by StringState(AndroidHome, System.getenv("ANDROID_HOME") ?: System.getProperty("user.home"))
-    var kotlinHome by StringState(KotlinHome, System.getenv("KOTLIN_HOME") ?: System.getProperty("user.home"))
-    var toolPaths by mutableStateOf(createToolPaths())
-    var showByteCode by BooleanState(ShowByteCode, false)
-    var showDex by BooleanState(ShowDex, true)
-    var showOat by BooleanState(ShowOat, true)
-    var showLogs by mutableStateOf(false)
-    var syncLines by BooleanState(SyncLines, true)
-    var lineNumberWidth by IntState(LineNumberWidth, 4)
-    var indent by IntState(Indent, 4)
-    var decompileHiddenIsa by BooleanState(DecompileHiddenIsa, true)
-    var sourceCode: String = readSourceCode(toolPaths)
+    var storytellerSdkKotlin by StringState(STORYTELLER_SDK_KOTLIN, "")
+    var showcase by StringState(SHOWCASE, "")
+    var nba by StringState(NBA, "")
+    var projectPaths by mutableStateOf(createProjectPaths())
     var windowWidth by IntState(WindowWidth, 1900)
     var windowHeight by IntState(WindowHeight, 1600)
     var windowPosX by IntState(WindowPosX, -1)
     var windowPosY by IntState(WindowPosY, -1)
-    var windowPlacement by SettingsState(Placement, Floating) { WindowPlacement.valueOf(this) }
-
+    var windowPlacement by SettingsState(Placement, WindowPlacement.Floating) { WindowPlacement.valueOf(this) }
     fun reloadToolPathsFromSettings() {
-        toolPaths = createToolPaths()
+        projectPaths = createProjectPaths()
     }
 
-    private fun createToolPaths() = ToolPaths(directory, Path.of(androidHome), Path.of(kotlinHome))
+    private fun createProjectPaths() = ProjectPaths(directory, Path.of(storytellerSdkKotlin), Path.of(showcase), Path.of(nba))
 
     private inner class BooleanState(key: String, initialValue: Boolean) :
         SettingsState<Boolean>(key, initialValue, { toBoolean() })
@@ -100,7 +86,6 @@ class BuilderState {
     }
 
     fun writeSourceCodeState() {
-        Files.writeString(toolPaths.sourceFile, sourceCode)
     }
 
     fun writeState() {
@@ -112,7 +97,7 @@ class BuilderState {
     }
 }
 
-private fun settingsPath() = Paths.get(System.getProperty("user.home"), ".kotlin-explorer").apply {
+private fun settingsPath() = Paths.get(System.getProperty("user.home"), ".project-builder").apply {
     if (!exists()) Files.createDirectory(this)
 }
 
@@ -141,10 +126,4 @@ private fun readSettings(file: Path): MutableMap<String, String> {
     }
 
     return settings
-}
-
-private fun readSourceCode(toolPaths: ToolPaths) = if (toolPaths.sourceFile.exists()) {
-    Files.readString(toolPaths.sourceFile)
-} else {
-    "fun square(a: Int): Int {\n    return a * a\n}\n"
 }

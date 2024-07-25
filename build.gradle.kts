@@ -72,6 +72,7 @@ kotlin {
                     exclude(group = "org.jetbrains.compose.material")
                 }
                 implementation(libs.intellijPlatform.icons)
+                implementation("io.github.vinceglb:filekit-core:0.7.0")
             }
         }
 

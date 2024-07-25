@@ -87,7 +87,7 @@ private class UiState(val builderState: BuilderState, window: ComposeWindow) {
     var progress by mutableStateOf(1f)
     var logs by mutableStateOf(AnnotatedString(""))
 
-    var showSettings by mutableStateOf(!builderState.toolPaths.isValid)
+    var showSettings by mutableStateOf(!builderState.projectPaths.isValid)
 
     val onProgressUpdate: (String, Float) -> Unit = { newStatus: String, newProgress: Float ->
         if (newStatus.isNotEmpty()) {
@@ -99,7 +99,7 @@ private class UiState(val builderState: BuilderState, window: ComposeWindow) {
     val onLogsUpdate: (AnnotatedString) -> Unit = { text ->
         logs = text
         if (text.isNotEmpty()) {
-            builderState.showLogs = true
+
         }
     }
 }
@@ -197,16 +197,6 @@ private fun BuilderState.getPanels(
     oatPanel: @Composable () -> Unit,
 ): List<@Composable () -> Unit> {
     return buildList {
-        add(sourcePanel)
-        if (showByteCode) {
-            add(byteCodePanel)
-        }
-        if (showDex) {
-            add(dexPanel)
-        }
-        if (showOat) {
-            add(oatPanel)
-        }
     }
 }
 
@@ -302,7 +292,6 @@ private fun shutdown(
 ) {
     builderState.setWindowState(windowState)
     builderState.writeState()
-    builderState.toolPaths.tempDirectory.deleteRecursively()
 }
 
 private fun BuilderState.getWindowSize() = DpSize(windowWidth.dp, windowHeight.dp)

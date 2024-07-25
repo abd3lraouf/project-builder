@@ -20,64 +20,36 @@ import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.*
 
-class ToolPaths(settingsDirectory: Path, androidHome: Path, kotlinHome: Path) {
-    constructor(settingsDirectory: Path, androidHome: String, kotlinHome: String) : this(
+class ProjectPaths(
+    settingsDirectory: Path,
+    storytellerSdkKotlin: Path,
+    showcase: Path,
+    nba: Path,
+) {
+    constructor(settingsDirectory: Path, storytellerSdkKotlin: String, showcase: String, nba: String) : this(
         settingsDirectory,
-        Path.of(androidHome),
-        Path.of(kotlinHome)
+        Path.of(storytellerSdkKotlin),
+        Path.of(showcase),
+        Path.of(nba)
     )
-    val tempDirectory = Files.createTempDirectory("kotlin-explorer")!!
-    val platform: Path
-    val d8: Path
-    val adb: Path = androidHome.resolve(if (isWindows) "platform-tools/adb.exe" else "platform-tools/adb")
-    val dexdump: Path
-    val kotlinc: Path
-    val kotlinLibs: List<Path>
-    val sourceFile: Path
 
     var isValid: Boolean = false
         private set
-    var isAndroidHomeValid: Boolean = false
+    var isStorytellerSdkKotlinValid: Boolean = false
         private set
-    var isKotlinHomeValid: Boolean = false
+    var isShowcaseValid: Boolean = false
+        private set
+    var isNbaValid: Boolean = false
         private set
 
     init {
-        val buildToolsDirectory = androidHome.resolve("build-tools")
-            .listIfExists()
-            .maxByOrNull { it.pathString }
-            ?: androidHome
-        d8 = System.getenv("D8_PATH")?.toPath() ?: buildToolsDirectory.resolve("lib/d8.jar")
-        dexdump = buildToolsDirectory.resolve(if (isWindows) "dexdump.exe" else "dexdump")
+        val storytellerSdkKotlinDirectory = storytellerSdkKotlin.resolve("gradlew")
+        isStorytellerSdkKotlinValid = storytellerSdkKotlinDirectory.exists()
+        val showcaseDirectory = showcase.resolve("gradlew")
+        isShowcaseValid = showcaseDirectory.exists()
+        val nbaDirectory = nba.resolve("gradlew")
+        isNbaValid = nbaDirectory.exists()
 
-        val platformsDirectory = androidHome.resolve("platforms")
-            .listIfExists()
-            .maxByOrNull { it.pathString }
-            ?: androidHome
-        platform = platformsDirectory.resolve("android.jar")
-
-        kotlinc = kotlinHome.resolve(if (isWindows) "bin/kotlinc.bat" else "bin/kotlinc")
-
-        val lib = kotlinHome.resolve("lib")
-        kotlinLibs = listOf(
-            lib.resolve("kotlin-stdlib-jdk8.jar"),
-            lib.resolve("kotlin-stdlib.jar"),
-            lib.resolve("kotlin-annotations-jvm.jar"),
-            lib.resolve("kotlinx-coroutines-core-jvm.jar"),
-            lib.listIfExists()
-                .filter { path -> path.extension == "jar" && path.name.startsWith("annotations-") }
-                .maxByOrNull { it.pathString }
-                ?: lib.resolve("annotations.jar")
-        )
-
-        sourceFile = settingsDirectory.resolve("source-code.kt")
-
-        isAndroidHomeValid = adb.exists() && d8.exists() && dexdump.exists()
-        isKotlinHomeValid = kotlinc.exists()
-        isValid = adb.exists() && d8.exists() && dexdump.exists() && kotlinc.exists()
+        isValid =  isStorytellerSdkKotlinValid && isShowcaseValid && isNbaValid
     }
 }
-
-private fun Path.listIfExists() = if (exists()) listDirectoryEntries() else emptyList()
-
-private fun String.toPath() = Path.of(this)
